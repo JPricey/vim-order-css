@@ -1,3 +1,8 @@
+if exists('g:loaded_order_css')
+  finish
+endif
+let g:loaded_order_css = 1
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -9,7 +14,12 @@ function! <SID>OrderCssInner() range
     return
   endif
 
-  execute 'pyfile ' . s:order_file
+  :py import vim, imp
+  execute ':py ordercss = imp.load_source("ordercss", "' . s:order_file . '")'
+  :py first_line = int(vim.eval('a:firstline'))
+  :py last_line = int(vim.eval('a:lastline'))
+  :py lines = list(vim.current.buffer.range(first_line, last_line))
+  :py vim.current.buffer[first_line - 1:last_line] = ordercss.transform(lines)
 endfunction
 
 command! -range OrderCSS  <line1>,<line2>call <SID>OrderCssInner()

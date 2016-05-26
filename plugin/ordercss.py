@@ -350,11 +350,9 @@ def transform(lines):
 
     return result_block
 
-import vim
+def main():
+    import sys
+    sys.stdout.write(''.join(transform(sys.stdin.readlines())))
 
-first_line = int(vim.eval('a:firstline'))
-last_line =  int(vim.eval('a:lastline'))
-
-lines = list(vim.current.buffer.range(first_line, last_line))
-
-vim.current.buffer[first_line - 1:last_line] = transform(lines)
+if __name__ == '__main__':
+    main()
